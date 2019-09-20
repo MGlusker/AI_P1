@@ -87,74 +87,23 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
         #node where the exit to the maze is 
-    node = problem.getStartState()
+    
 
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
         #starting node will always be in the solution
-    """    
-        mazeGraph.nodes[0].inSolution = true;
-
-        Stack nodeStack = new Stack();
-        Node[] toReturn;
-
-        nodeStack.push(startingNode); 
-
-        #while the list of vertices to explore isn't empty
-        while(!nodeStack.isEmpty()) {
-            #remove the next vertice in the stack
-            Node vertice = nodeStack.pop();
-            
-           #if the vertice hasn't been visited
-            if(!vertice.visited) {
-                #find all of its neighbors 
-                Stack neighbors = findAllNeighbors(vertice, mazeGraph);
-                
-                #while the neighbors list isn't empty, add all neighbors to nodeStack
-                while(!neighbors.isEmpty()) {
-                    
-                    nodeStack.push(neighbors.pop());
-
-                    #if this is the first time visiting the neighbor then update parent
-                    if(!nodeStack.peek().visited) {
-                        nodeStack.peek().parent = vertice;
-                    }
-                }
-                
-                #now mark that this vertice has been visited
-                vertice.visited = true;
-            }
-            
-            #if we're at the exit node
-            if(vertice.index == mazeExit.index) {
-                #then go back up the path we just went down
-                #and add all of the nodes along the way to be in the list
-                Stack solutionStack = new Stack();
-                Node currentNode = vertice;
-                while(currentNode != null) {
-                    solutionStack.push(currentNode);
-                    //currentNode.inSolution = true;
-                    currentNode = currentNode.parent;
-                }
-
-                toReturn = new Node[solutionStack.size()];
-
-                #now fill in node array with the nodes from our solution stack
-                for(int i = 0; i < toReturn.length; i++){
-                    toReturn[i] = solutionStack.pop();
-                }
-
-                return toReturn;
-            
-        
-        return null;
-    
+  
+    node = problem.getStartState()
+    if(problem.s)
 
 
 
 
-"""
+
+
+
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     """*** YOUR CODE HERE ***"""
