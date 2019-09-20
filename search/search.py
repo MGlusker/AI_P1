@@ -87,8 +87,9 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
         #node where the exit to the maze is 
-        node = problem.getStartState()
+    node = problem.getStartState()
         #starting node will always be in the solution
+    """    
         mazeGraph.nodes[0].inSolution = true;
 
         Stack nodeStack = new Stack();
@@ -149,15 +150,15 @@ def depthFirstSearch(problem):
 
 
 
-
+"""
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+    """*** YOUR CODE HERE ***"""
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
+    #"*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -169,7 +170,7 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    #"*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
 
