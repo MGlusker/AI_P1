@@ -88,6 +88,10 @@ def depthFirstSearch(problem):
     """
         #node where the exit to the maze is 
     node = problem.getStartState()
+
+    print "Start:", problem.getStartState()
+    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    print "Start's successors:", problem.getSuccessors(problem.getStartState())
         #starting node will always be in the solution
     """    
         mazeGraph.nodes[0].inSolution = true;
