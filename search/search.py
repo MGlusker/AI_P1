@@ -86,16 +86,35 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-        #node where the exit to the maze is 
+        
     
 
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
-        #starting node will always be in the solution
-  
-    node = problem.getStartState()
-    if(problem.s)
+    #print "Start:", problem.getStartState()
+    #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    #print "Start's successors:", problem.getSuccessors(problem.getStartState())
+       
+
+
+
+    # need to somehow add that the cost is 0, not just that the start state is
+    # (5, 5) which is a tuple
+    startNode = problem.getStartState()
+    # if the the initial state is the same as the goal state
+    if(problem.isGoalState(startNode)):
+        return Directions.STOP
+    
+    frontier = Stack()
+    frontier.push(startNode)
+    explored = {}
+
+    while not frontier.isEmpty:
+        node = frontier.pop()
+
+        # if the node hasn't already been visited
+        # returns none if not found
+        if(explored.get(node, None))
+
+    
 
 
 
