@@ -90,14 +90,11 @@ def depthFirstSearch(problem):
     
 
     #print "Start:", problem.getStartState()
+    # (5, 5)
     #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     #print "Start's successors:", problem.getSuccessors(problem.getStartState())
-       
-
-
-
-    # need to somehow add that the cost is 0, not just that the start state is
-    # (5, 5) which is a tuple
+    # [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
+    #print "solution is: " 
     startNode = problem.getStartState()
     # if the the initial state is the same as the goal state
     if(problem.isGoalState(startNode)):
@@ -105,27 +102,30 @@ def depthFirstSearch(problem):
     
     frontier = util.Stack()
     frontier.push(startNode)
-    explored = {}
-    print startNode
-    # [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
-    print problem.getSuccessors(startNode)
+    explored = []
 
-    """while not frontier.isEmpty:
+    while not frontier.isEmpty():
+        print "whileloop"
         node = frontier.pop()
-        explored.update({node})
+        # add the node's state to explored
+        explored.append(node)
+        print explored
+        #explored.update({node[0] : 1})
 
         # find the children of the popped off node state 
-        neighbors = node.getLegalPacmanActions()
+        neighbors = problem.getSuccessors(node)
+        print neighbors
 
         # iterate through each child / action
         for child in neighbors:
             # add each child to the frontier if it's not in explored or frontier
-            if child not in explored or child not in frontier:
-                if child.isGoalState():
+            if child[0] not in explored or child not in frontier:
+                if problem.isGoalState(child[0]):
+                    print "solution is: " + child
                     # return the solution by going through all the nodes/actions
-                frontier.push(child)
+                frontier.push(child[0])
 
-      """ 
+       
 
      # if the node hasn't already been visited
         # returns none if not found
