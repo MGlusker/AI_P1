@@ -103,27 +103,49 @@ def depthFirstSearch(problem):
     frontier = util.Stack()
     frontier.push(startNode)
     explored = []
+    print "initial frontier"
+    print frontier.list
 
     while not frontier.isEmpty():
         print "whileloop"
         node = frontier.pop()
+        
         # add the node's state to explored
-        explored.append(node)
+        # this deals with adding the inital state in properly
+        if len(node) == 2:
+            explored.append(node)
+           
+        else:
+            explored.append(node[0])
+            
+
+        print "explored"
         print explored
         #explored.update({node[0] : 1})
 
         # find the children of the popped off node state 
-        neighbors = problem.getSuccessors(node)
-        print neighbors
+        if len(node) == 2:
+            neighbors = problem.getSuccessors(node)
+           
+        else:
+            neighbors = problem.getSuccessors(node[0])
+        
 
         # iterate through each child / action
         for child in neighbors:
             # add each child to the frontier if it's not in explored or frontier
-            if child[0] not in explored or child not in frontier:
+            if (child[0] not in explored) or (child not in frontier.list):
                 if problem.isGoalState(child[0]):
                     print "solution is: " + child
                     # return the solution by going through all the nodes/actions
-                frontier.push(child[0])
+                frontier.push(child)
+                print "frontier"
+                print frontier.list
+            else:
+                print "child is in explored or frontier already"
+                print child[0]
+
+
 
        
 
