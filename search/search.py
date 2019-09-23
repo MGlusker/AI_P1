@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -87,77 +88,161 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
         
-    
-
+    from game import Directions
+    from game import Actions
     #print "Start:", problem.getStartState()
     # (5, 5)
     #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     #print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    print
     # [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
     #print "solution is: " 
-    startNode = problem.getStartState()
+
+    #Set startNode to the startState (initial state; place where pacman starts)
+    
+    startNode = myWrapperState(problem.getStartState(), None, None)
+
     # if the the initial state is the same as the goal state
-    if(problem.isGoalState(startNode)):
+    if(problem.isGoalState(startNode.getState())):
         return Directions.STOP
     
-    frontier = util.Stack()
-    frontier.push(startNode)
-    explored = []
-    print "initial frontier"
-    print frontier.list
 
-    while not frontier.isEmpty():
-        print "whileloop"
+    frontier = util.Stack() #create a stack called frontier to store the states that are on the frontier
+    frontierStates = util.Stack()
+
+    frontier.push(startNode) #Add the init node to the frontier 
+    frontierStates.push(startNode.getState())
+
+    explored = [] #create an explored set
+    exploredStates = []
+    #print "initial frontier", frontier.list
+  
+
+    while not frontier.isEmpty(): #loop through frontier as long as a frontier exits
+
+        #pop the next node off the frontier 
+        #this is the node we're investigating over this loop
+        #node takes a tuple format (x,y)
         node = frontier.pop()
+        nodeState = frontierStates.pop()
+
         
+
         # add the node's state to explored
         # this deals with adding the inital state in properly
-        if len(node) == 2:
-            explored.append(node)
-           
-        else:
-            explored.append(node[0])
-            
+        explored.append(node)
+        exploredStates.append(nodeState)
 
-        print "explored"
-        print explored
-        #explored.update({node[0] : 1})
+        #find the children of the popped off node state 
+        #Successor of format ((x, y), 'Direction', Cost)
+        #SuccessorsToStates(listOfSuccessors, parent node)
+     
+        convertedNeighbors = successorsToStates(problem.getSuccessors(node.getState()), node)
+        #print convertedNeighbors.__class__
+        #print convertedNeighbors[0].__class__
 
-        # find the children of the popped off node state 
-        #if len(node) == 2:
-            # neighbors = problem.getSuccessors(node)
-           
-        #else:
-           # neighbors = problem.getSuccessors(node[0])
+        #printWrapperList(convertedNeighbors)
         
-
         # iterate through each child / action
-        for child in neighbors:
+        for child in convertedNeighbors:
+
+            
             # add each child to the frontier if it's not in explored or frontier
-            if (child[0] not in explored) or (child not in frontier.list):
-                if problem.isGoalState(child[0]):
-                    print "solution is: " + child
-                    # return the solution by going through all the nodes/actions
+            if not ((child.getState() in exploredStates) or (child.getState() in frontierStates.list)):
+
+                # return the solution by going through all the nodes/actions
+                if problem.isGoalState(child.getState()):
+                    print "**"
+                    print "** Solution is: " 
+                    print child.getState()
+                    print "**"
+                    solution = child
+
                 frontier.push(child)
-                print "frontier"
-                print frontier.list
-            else:
-                print "child is in explored or frontier already"
-                print child[0]
+                frontierStates.push(child.getState())
 
+              
+            #else:
+            #   print "child is in explored or frontier already"
+            #   print child.getState()
 
+    toReturn = []
 
-       
+    current = solution
+    print "YEet"
+    #print not(current.getState() == startNode)
+    #print current.__class__
+    #print startNode.__class__
+    
 
-     # if the node hasn't already been visited
-        # returns none if not found
-        #if(explored.get(node, None))
+    while not (current.getState() == startNode.getState()):
+        print "loop"
+
+        toReturn.append(current.getDirection())
+        #print current.__class__
+        current = current.getParent()
+        #print current.__class__
+
+   
+    toReturn.reverse()
+    toReturn.append("Stop")
+    print toReturn
+   
+    return toReturn
+
 
         
 
 
 
+class myWrapperState():
 
+    def __init__(self, sta, dir, par):
+        self.state = sta
+        self.direction = dir
+        self.parent = par
+
+    def getState(self):
+        return self.state
+
+    def getParent(self):
+        return self.parent
+
+    def getDirection(self):
+        return self.direction
+
+
+
+
+
+def printWrapperList(wrapperClassList):
+    print"*******"
+
+    for i in wrapperClassList:
+        print "(",i.state, ",", i.parent, ")"
+    print"*******"
+
+def successorsToStates(myList, parent):
+
+    toReturn = []
+    states = []
+    directions = []
+
+    for triple in myList:
+        
+        states.append(triple[0])
+        directions.append(triple[1])
+
+    
+    i = 0
+   
+    while i < len(states):
+        toReturn.append(myWrapperState(states[i], directions[i], parent))
+        i += 1
+
+    
+    return toReturn
+    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
