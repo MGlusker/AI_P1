@@ -115,7 +115,7 @@ def depthFirstSearch(problem):
 
     explored = [] #create an explored set
     exploredStates = []
-    #print "initial frontier", frontier.list
+    
   
 
     while not frontier.isEmpty(): #loop through frontier as long as a frontier exits
@@ -138,10 +138,7 @@ def depthFirstSearch(problem):
         #SuccessorsToStates(listOfSuccessors, parent node)
      
         convertedNeighbors = successorsToStates(problem.getSuccessors(node.getState()), node)
-        #print convertedNeighbors.__class__
-        #print convertedNeighbors[0].__class__
-
-        #printWrapperList(convertedNeighbors)
+       
         
         # iterate through each child / action
         for child in convertedNeighbors:
@@ -151,42 +148,25 @@ def depthFirstSearch(problem):
             if not ((child.getState() in exploredStates) or (child.getState() in frontierStates.list)):
 
                 # return the solution by going through all the nodes/actions
-                if problem.isGoalState(child.getState()):
-                    print "**"
-                    print "** Solution is: " 
-                    print child.getState()
-                    print "**"
+                if problem.isGoalState(child.getState()): 
                     solution = child
+                    break
 
                 frontier.push(child)
                 frontierStates.push(child.getState())
 
-              
-            #else:
-            #   print "child is in explored or frontier already"
-            #   print child.getState()
-
+            
     toReturn = []
-
     current = solution
-    print "YEet"
-    #print not(current.getState() == startNode)
-    #print current.__class__
-    #print startNode.__class__
     
-
     while not (current.getState() == startNode.getState()):
-        print "loop"
 
         toReturn.append(current.getDirection())
-        #print current.__class__
         current = current.getParent()
-        #print current.__class__
 
    
     toReturn.reverse()
-    toReturn.append("Stop")
-    print toReturn
+    
    
     return toReturn
 
