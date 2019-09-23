@@ -112,7 +112,12 @@ def depthFirstSearch(problem):
 
         # if the node hasn't already been visited
         # returns none if not found
-        if(explored.get(node, None))
+        explored.push(node)
+        if not(explored.get(node, None)):
+            
+
+        for
+
 
     
 
