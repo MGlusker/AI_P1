@@ -103,21 +103,35 @@ def depthFirstSearch(problem):
     if(problem.isGoalState(startNode)):
         return Directions.STOP
     
-    frontier = Stack()
+    frontier = util.Stack()
     frontier.push(startNode)
     explored = {}
+    print startNode
+    # [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
+    print problem.getSuccessors(startNode)
 
-    while not frontier.isEmpty:
+    """while not frontier.isEmpty:
         node = frontier.pop()
+        explored.update({node})
 
-        # if the node hasn't already been visited
+        # find the children of the popped off node state 
+        neighbors = node.getLegalPacmanActions()
+
+        # iterate through each child / action
+        for child in neighbors:
+            # add each child to the frontier if it's not in explored or frontier
+            if child not in explored or child not in frontier:
+                if child.isGoalState():
+                    # return the solution by going through all the nodes/actions
+                frontier.push(child)
+
+      """ 
+
+     # if the node hasn't already been visited
         # returns none if not found
-        if(explored.get(node, None))
+        #if(explored.get(node, None))
 
-    
-
-
-
+        
 
 
 
