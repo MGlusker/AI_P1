@@ -108,13 +108,11 @@ def depthFirstSearch(problem):
     
 
     frontier = util.Stack() #create a stack called frontier to store the states that are on the frontier
-    frontierStates = util.Stack()
 
     frontier.push(startNode) #Add the init node to the frontier 
-    frontierStates.push(startNode.getState())
 
     explored = [] #create an explored set
-    exploredStates = []
+
     
   
 
@@ -124,19 +122,17 @@ def depthFirstSearch(problem):
         #this is the node we're investigating over this loop
         #node takes a tuple format (x,y)
         node = frontier.pop()
-        nodeState = frontierStates.pop()
 
         
 
         # add the node's state to explored
         # this deals with adding the inital state in properly
         explored.append(node)
-        exploredStates.append(nodeState)
+       
 
         #find the children of the popped off node state 
         #Successor of format ((x, y), 'Direction', Cost)
         #SuccessorsToStates(listOfSuccessors, parent node)
-     
         convertedNeighbors = successorsToStates(problem.getSuccessors(node.getState()), node)
        
         
@@ -145,7 +141,7 @@ def depthFirstSearch(problem):
 
             
             # add each child to the frontier if it's not in explored or frontier
-            if not ((child.getState() in exploredStates) or (child.getState() in frontierStates.list)):
+            if not ((child.getState() in classToState(explored)) or (child.getState() in classToState(frontier.list))):
 
                 # return the solution by going through all the nodes/actions
                 if problem.isGoalState(child.getState()): 
@@ -153,9 +149,9 @@ def depthFirstSearch(problem):
                     break
 
                 frontier.push(child)
-                frontierStates.push(child.getState())
+                
 
-            
+    
     toReturn = []
     current = solution
     
@@ -177,9 +173,9 @@ def depthFirstSearch(problem):
 
 class myWrapperState():
 
-    def __init__(self, sta, dir, par):
+    def __init__(self, sta, direct, par):
         self.state = sta
-        self.direction = dir
+        self.direction = direct
         self.parent = par
 
     def getState(self):
@@ -193,7 +189,13 @@ class myWrapperState():
 
 
 
+def classToState(myList):
+    toReturn =[]
 
+    for wrapperClass in myList:
+        toReturn.append(wrapperClass.getState())
+
+    return toReturn
 
 def printWrapperList(wrapperClassList):
     print"*******"
