@@ -73,124 +73,94 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def breadthFirstSearch(problem):
-    start = stateClass(problem.getStartState(), "Stop", 0,  None)
-
-    # if the the initial state is the same as the goal state
-    if(problem.isGoalState(start.getCoords())):
-        return Directions.STOP
-    
-    #create a Queue called frontier to store the states that are on the frontier
-    frontier = util.Queue()
-    frontier.push(start) #Add the init state to the frontier 
-
-    explored = [] #create an explored set
-    explored.append(start)
-    toReturn = []
-    
-    while not frontier.isEmpty(): #loop through frontier as long as a frontier exits
-
-        #pop the next state off the frontier 
-        #this is the state we're investigating over this loop
-        #state takes a tuple format (x,y)
-        state = frontier.pop()
-        
-        if problem.isGoalState(state.getCoords()): 
-                    current = state
-                    while not (current.getCoords() == start.getCoords()):
-
-                        toReturn.append(current.getDirection())
-                        current = current.getParent()
-
-                    toReturn.reverse()
-                    return toReturn
-       
-
-        #find the children of the popped off state state 
-        #Successor of format ((x, y), 'Direction', Cost)
-        #SuccessorsToStates(listOfSuccessors, parentState)
-        convertedNeighbors = successorsToStates(problem.getSuccessors(state.getCoords()), state)
- 
-        
-        # iterate through each child / action
-        for child in convertedNeighbors:
-            
-            # add each child to the frontier if it's not in explored or frontier
-            if not child.getCoords() in classToState(explored):
-
-                # add the state's state to explored
-                # this deals with adding the inital state in properly
-                explored.append(child)
-                frontier.push(child)
-
-    print "FAILURE: No Solution Found"
-    return Directions.STOP
-
 
 def depthFirstSearch(problem):
-    start = stateClass(problem.getStartState(), "Stop", 0,  None)
 
-    # if the the initial state is the same as the goal state
-    if(problem.isGoalState(start.getCoords())):
-        return Directions.STOP
-    
-    #create a stack called frontier to store the states that are on the frontier
+    # get the start state and convert it into a node
+    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
+
+    #create a stack to store the nodes that are on the frontier
     frontier = util.Stack()
-    frontier.push(start) #Add the init state to the frontier 
 
-    explored = [] #create an explored set
-    explored.append(start)
-    toReturn = []
-    
-    while not frontier.isEmpty(): #loop through frontier as long as a frontier exits
+    frontier.push(startNode) 
 
-        #pop the next state off the frontier 
-        #this is the state we're investigating over this loop
-        #state takes a tuple format (x,y)
-        state = frontier.pop()
+    # create an explored set that keeps track of explored states 
+    explored = [] 
+
+    # loop through frontier as long as it contains at least one node
+    while not frontier.isEmpty(): 
+
+        # pop the next node off the frontier
+        node = frontier.pop()
         
-        if problem.isGoalState(state.getCoords()): 
-                    current = state
-                    while not (current.getCoords() == start.getCoords()):
-
-                        toReturn.append(current.getDirection())
-                        current = current.getParent()
-
-                    toReturn.reverse()
-                    return toReturn
+        # if the popped off node's state is the goal state, return the solution
+        if problem.isGoalState(node.getState()): 
+            return getSolution(node, startNode)
        
+        # if the node's state isn't in explored 
+        if node.getState() not in explored:
 
-        #find the children of the popped off state state 
-        #Successor of format ((x, y), 'Direction', Cost)
-        #SuccessorsToStates(listOfSuccessors, parentState)
-        convertedNeighbors = successorsToStates(problem.getSuccessors(state.getCoords()), state)
- 
-        
-        # iterate through each child / action
-        for child in convertedNeighbors:
-            
-            # add each child to the frontier if it's not in explored or frontier
-            if not (child.getCoords() in classToState(explored)):
+            # then add the nodes state to explored
+            explored.append(node.getState())
 
-                # add the state's state to explored
-                # this deals with adding the inital state in properly
-                explored.append(child)
+            # and add its children to the frontier 
+            # convertedNeighbors is a list of the succesor nodes
+            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
+            for child in convertedNeighbors:
                 frontier.push(child)
 
     print "FAILURE: No Solution Found"
     return Directions.STOP
-                
+  
 
-class stateClass():
+def breadthFirstSearch(problem):
 
-    def __init__(self, coords, direct, cost, parent):
-        self.coords = coords
+    # get the start state and convert it into a node
+    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
+
+    #create a stack to store the nodes that are on the frontier
+    frontier = util.Queue()
+
+    frontier.push(startNode) 
+
+    # create an explored set that keeps track of explored states 
+    explored = [] 
+
+    # loop through frontier as long as it contains at least one node
+    while not frontier.isEmpty(): 
+
+        # pop the next node off the frontier
+        node = frontier.pop()
+        
+        # if the popped off node's state is the goal state, return the solution
+        if problem.isGoalState(node.getState()): 
+            return getSolution(node, startNode)
+       
+        # if the node's state isn't in explored 
+        if node.getState() not in explored:
+
+            # then add the nodes state to explored
+            explored.append(node.getState())
+
+            # and add its children to the frontier 
+            # convertedNeighbors is a list of the succesor nodes
+            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
+            for child in convertedNeighbors:
+                frontier.push(child)
+
+    print "FAILURE: No Solution Found"
+    return Directions.STOP
+
+class nodeClass():
+
+    def __init__(self, state, direct, cost, parent):
+        self.state = state
         self.direction = direct
         self.parent = parent
         self.cost = cost #cost from parent to this State
 
-    def getCoords(self):
-        return self.coords
+    def getState(self):
+        return self.state
 
     def getParent(self):
         return self.parent
@@ -199,12 +169,24 @@ class stateClass():
         return self.direction
 
 
+# returns a list of directions to take by expanding the goal state down to the start state
+def getSolution(node, startNode):
+    currentNode = node
+    toReturn = []
 
+    while not (currentNode.getState() == startNode.getState()):
+        toReturn.append(currentNode.getDirection())
+        currentNode = currentNode.getParent()
+
+    toReturn.reverse()
+    return toReturn
+
+"""
 def classToState(myList):
     toReturn =[]
 
     for wrapperClass in myList:
-        toReturn.append(wrapperClass.getCoords())
+        toReturn.append(wrapperClass.getState())
 
     return toReturn
 
@@ -214,10 +196,11 @@ def printStateList(wrapperClassList):
     for i in wrapperClassList:
         print "(",i.state, ",", i.parent, ")"
     print"*******"
+"""
 
-def successorsToStates(myList, parent):
+def successorsToNodes(myList, parent):
 
-    toReturn = []
+    listOfNodes = []
     states = []
     directions = []
     costs = []
@@ -227,13 +210,11 @@ def successorsToStates(myList, parent):
         directions.append(triple[1])
         costs.append(triple[2])
     
-    i = 0
-    while i < len(states):
-        toReturn.append(stateClass(states[i], directions[i], costs[i], parent))
-        i += 1
-
+    for i in range(len(states)):
+        listOfNodes.append(nodeClass(states[i], directions[i], costs[i], parent))
+        
     
-    return toReturn
+    return listOfNodes
     
 
 
