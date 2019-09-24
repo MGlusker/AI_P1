@@ -118,7 +118,7 @@ def breadthFirstSearch(problem):
     # get the start state and convert it into a node
     startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
 
-    #create a stack to store the nodes that are on the frontier
+    #create a queue to store the nodes that are on the frontier
     frontier = util.Queue()
 
     frontier.push(startNode) 
@@ -235,7 +235,8 @@ def uniformCostSearch(problem):
     # get the start state and convert it into a node
     startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
 
-    #create a stack to store the nodes that are on the frontier
+    # create a priority queue to store the nodes that are on the frontier
+    #PQ ordered by path-cost where lowest cost = highest priority = will be popped out first)
     frontier = util.PriorityQueue()
 
     frontier.push(startNode) 
