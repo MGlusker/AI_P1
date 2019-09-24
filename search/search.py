@@ -87,99 +87,76 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-        
-    from game import Directions
-    from game import Actions
-    #print "Start:", problem.getStartState()
-    # (5, 5)
-    #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    #print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    print
-    # [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
-    #print "solution is: " 
-
-    #Set startNode to the startState (initial state; place where pacman starts)
     
-    startNode = myWrapperState(problem.getStartState(), None, None)
+    start = stateClass(problem.getStartState(), "Stop", 0,  None)
 
     # if the the initial state is the same as the goal state
-    if(problem.isGoalState(startNode.getState())):
+    if(problem.isGoalState(start.getCoords())):
         return Directions.STOP
     
 
     frontier = util.Stack() #create a stack called frontier to store the states that are on the frontier
-
-    frontier.push(startNode) #Add the init node to the frontier 
+    frontier.push(start) #Add the init state to the frontier 
 
     explored = [] #create an explored set
-
+    toReturn = []
     
-  
-
     while not frontier.isEmpty(): #loop through frontier as long as a frontier exits
 
-        #pop the next node off the frontier 
-        #this is the node we're investigating over this loop
-        #node takes a tuple format (x,y)
-        node = frontier.pop()
+        #pop the next state off the frontier 
+        #this is the state we're investigating over this loop
+        #state takes a tuple format (x,y)
+        state = frontier.pop()
 
         
 
-        # add the node's state to explored
+        # add the state's state to explored
         # this deals with adding the inital state in properly
-        explored.append(node)
+        explored.append(state)
        
 
-        #find the children of the popped off node state 
+        #find the children of the popped off state state 
         #Successor of format ((x, y), 'Direction', Cost)
-        #SuccessorsToStates(listOfSuccessors, parent node)
-        convertedNeighbors = successorsToStates(problem.getSuccessors(node.getState()), node)
+        #SuccessorsToStates(listOfSuccessors, parentState)
+        convertedNeighbors = successorsToStates(problem.getSuccessors(state.getCoords()), state)
        
         
         # iterate through each child / action
         for child in convertedNeighbors:
-
             
             # add each child to the frontier if it's not in explored or frontier
-            if not ((child.getState() in classToState(explored)) or (child.getState() in classToState(frontier.list))):
+            if not ((child.getCoords() in classToState(explored)) or (child.getCoords() in classToState(frontier.list))):
 
-                # return the solution by going through all the nodes/actions
-                if problem.isGoalState(child.getState()): 
-                    solution = child
-                    break
+                # return the solution by going through all the State/actions
+                if problem.isGoalState(child.getCoords()): 
+                    current = child
+                    while not (current.getCoords() == start.getCoords()):
+
+                        toReturn.append(current.getDirection())
+                        current = current.getParent()
+
+                    toReturn.reverse()
+                    return toReturn
+                    
 
                 frontier.push(child)
+
+    print "FAILURE: No Solution Found"
+    return Directions.STOP
                 
 
-    
-    toReturn = []
-    current = solution
-    
-    while not (current.getState() == startNode.getState()):
 
-        toReturn.append(current.getDirection())
-        current = current.getParent()
+#myWrapperState
+class stateClass():
 
-   
-    toReturn.reverse()
-    
-   
-    return toReturn
-
-
-        
-
-
-
-class myWrapperState():
-
-    def __init__(self, sta, direct, par):
-        self.state = sta
+    def __init__(self, coords, direct, cost, parent):
+        self.coords = coords
         self.direction = direct
-        self.parent = par
+        self.parent = parent
+        self.cost = cost #cost from parent to this State
 
-    def getState(self):
-        return self.state
+    def getCoords(self):
+        return self.coords
 
     def getParent(self):
         return self.parent
@@ -193,11 +170,11 @@ def classToState(myList):
     toReturn =[]
 
     for wrapperClass in myList:
-        toReturn.append(wrapperClass.getState())
+        toReturn.append(wrapperClass.getCoords())
 
     return toReturn
 
-def printWrapperList(wrapperClassList):
+def printStateList(wrapperClassList):
     print"*******"
 
     for i in wrapperClassList:
@@ -209,17 +186,16 @@ def successorsToStates(myList, parent):
     toReturn = []
     states = []
     directions = []
+    costs = []
 
     for triple in myList:
-        
         states.append(triple[0])
         directions.append(triple[1])
-
+        costs.append(triple[2])
     
     i = 0
-   
     while i < len(states):
-        toReturn.append(myWrapperState(states[i], directions[i], parent))
+        toReturn.append(stateClass(states[i], directions[i], costs[i], parent))
         i += 1
 
     
