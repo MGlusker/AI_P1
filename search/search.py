@@ -85,14 +85,14 @@ def depthFirstSearch(problem):
     frontier.push(startNode) 
 
     # create an explored set that keeps track of explored states 
-    explored = [] 
+    explored = set()
 
     # loop through frontier as long as it contains at least one node
     while not frontier.isEmpty(): 
 
         # pop the next node off the frontier
         node = frontier.pop()
-        
+
         # if the popped off node's state is the goal state, return the solution
         if problem.isGoalState(node.getState()): 
             return getSolution(node, startNode)
@@ -101,7 +101,7 @@ def depthFirstSearch(problem):
         if node.getState() not in explored:
 
             # then add the nodes state to explored
-            explored.append(node.getState())
+            explored.add(node.getState())
 
             # and add its children to the frontier 
             # convertedNeighbors is a list of the succesor nodes
@@ -119,12 +119,12 @@ def breadthFirstSearch(problem):
     startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
 
     #create a stack to store the nodes that are on the frontier
-    frontier = util.Queue()
+    frontier = util.PriorityQueue()
 
     frontier.push(startNode) 
 
     # create an explored set that keeps track of explored states 
-    explored = [] 
+    explored = set() 
 
     # loop through frontier as long as it contains at least one node
     while not frontier.isEmpty(): 
@@ -140,7 +140,7 @@ def breadthFirstSearch(problem):
         if node.getState() not in explored:
 
             # then add the nodes state to explored
-            explored.append(node.getState())
+            explored.add(node.getState())
 
             # and add its children to the frontier 
             # convertedNeighbors is a list of the succesor nodes
@@ -162,11 +162,18 @@ class nodeClass():
     def getState(self):
         return self.state
 
+    def getDirection(self):
+        return self.direction
+
+    def getCost(self):
+        return self.cost
+
     def getParent(self):
         return self.parent
 
-    def getDirection(self):
-        return self.direction
+    def printNode(self):
+        print "*State:",self.state,"*Direction:",self.direction,"*Cost:",self.cost
+        
 
 
 # returns a list of directions to take by expanding the goal state down to the start state
@@ -223,7 +230,43 @@ def successorsToNodes(myList, parent):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     #"*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+
+    # get the start state and convert it into a node
+    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
+
+    #create a stack to store the nodes that are on the frontier
+    frontier = util.Queue()
+
+    frontier.push(startNode) 
+
+    # create an explored set that keeps track of explored states 
+    explored = [] 
+
+    # loop through frontier as long as it contains at least one node
+    while not frontier.isEmpty(): 
+
+        # pop the next node off the frontier
+        node = frontier.pop()
+        
+        # if the popped off node's state is the goal state, return the solution
+        if problem.isGoalState(node.getState()): 
+            return getSolution(node, startNode)
+       
+        # if the node's state isn't in explored 
+        if node.getState() not in explored:
+
+            # then add the nodes state to explored
+            explored.append(node.getState())
+
+            # and add its children to the frontier 
+            # convertedNeighbors is a list of the succesor nodes
+            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
+            for child in convertedNeighbors:
+                frontier.push(child)
+
+    print "FAILURE: No Solution Found"
+    return Directions.STOP
 
 def nullHeuristic(state, problem=None):
     """
