@@ -275,7 +275,7 @@ class CornersProblem(search.SearchProblem):
 
     def __init__(self, startingGameState):
         """
-        Stores the walls, pacman's starting position and corners.
+        Stores the walls, an's starting position and corners.
         """
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()

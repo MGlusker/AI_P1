@@ -170,7 +170,7 @@ def depthFirstSearch(problem):
         for child in convertedNeighbors:
             
             # add each child to the frontier if it's not in explored or frontier
-            if not child.getCoords() in classToState(explored):
+            if not (child.getCoords() in classToState(explored)):
 
                 # add the state's state to explored
                 # this deals with adding the inital state in properly
