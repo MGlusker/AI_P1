@@ -203,9 +203,61 @@ def successorsToStates(myList, parent):
     
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    """*** YOUR CODE HERE ***"""
-    util.raiseNotDefined()
+    start = stateClass(problem.getStartState(), "Stop", 0,  None)
+
+    # if the the initial state is the same as the goal state
+    if(problem.isGoalState(start.getCoords())):
+        return Directions.STOP
+    
+
+    frontier = util.Queue() #create a stack called frontier to store the states that are on the frontier
+    frontier.push(start) #Add the init state to the frontier 
+
+    explored = [] #create an explored set
+    toReturn = []
+    
+    while not frontier.isEmpty(): #loop through frontier as long as a frontier exits
+
+        #pop the next state off the frontier 
+        #this is the state we're investigating over this loop
+        #state takes a tuple format (x,y)
+        state = frontier.pop()
+
+        
+
+        # add the state's state to explored
+        # this deals with adding the inital state in properly
+        explored.append(state)
+       
+
+        #find the children of the popped off state state 
+        #Successor of format ((x, y), 'Direction', Cost)
+        #SuccessorsToStates(listOfSuccessors, parentState)
+        convertedNeighbors = successorsToStates(problem.getSuccessors(state.getCoords()), state)
+       
+        
+        # iterate through each child / action
+        for child in convertedNeighbors:
+            
+            # add each child to the frontier if it's not in explored or frontier
+            if not ((child.getCoords() in classToState(explored)) or (child.getCoords() in classToState(frontier.list))):
+
+                # return the solution by going through all the State/actions
+                if problem.isGoalState(child.getCoords()): 
+                    current = child
+                    while not (current.getCoords() == start.getCoords()):
+
+                        toReturn.append(current.getDirection())
+                        current = current.getParent()
+
+                    toReturn.reverse()
+                    return toReturn
+                    
+
+                frontier.push(child)
+
+    print "FAILURE: No Solution Found"
+    return Directions.STOP
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
