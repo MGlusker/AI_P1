@@ -272,6 +272,8 @@ class nodeClass():
         self.parent = parent
         self.cost = cost #cost from parent to this State
 
+    def getState(self):
+        return self.state
 
     def getDirection(self):
         return self.direction
@@ -318,13 +320,16 @@ class CornersProblem(search.SearchProblem):
                 print 'Warning: no food in corner ' + str(corner)
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
 
-        #This is the necessary corners information
-        #The corners list corresponds to [Lower Left, Upper Left, Lower Right, Upper Right]
         self.initHasHitCorners = [False, False, False, False]
-        self.startNode = nodeClass(self.getStartState(), None, None, None)
+        self.startState = stateClass(self.startingPosition, self.initHasHitCorners)  
+
+        #The corners list corresponds to [Lower Left, Upper Left, Lower Right, Upper Right]
+        
+        self.startNode = nodeClass(self.getStartState(), "Stop", 0, None)
+        
 
     def getStartState(self):
-        return stateClass(self.startingPosition, self.initHasHitCorners)        
+        return self.startState    
 
 
     def isGoalState(self, state):
@@ -359,18 +364,20 @@ class CornersProblem(search.SearchProblem):
             hitsWall = self.walls[nextx][nexty]
 
             coordsOfAction = nextx, nexty
-
+            #(successor, action, stepCost)
             if not hitsWall:
-                successors.append(stateClass(coordsOfAction, state.getHasHitCorners()))
+                successors.append(stateClass(coordsOfAction, state.getHasHitCorners()), action, 1)
 
-        self.corners = ((1,1), (1,top), (right, 1), (right, top))
+        
 
-        tempCorners = corners
-        i = 0
-        while i < 4:
-            if(state.getCoords() == corners[i]):
+        tempCorners = state.getHasHitCorners()
+    
+        #This adds successor when in corner
+        #specifically changing the state from not having hit corner to having hit corner
+        for i in range(4):
+            if(state.getCoords() == self.corners[i]):
                 tempCorners[i] == True
-                successors.append(stateClass(state.getCoords(), tempCorners))
+                successors.append(stateClass(state.getCoords(), tempCorners), None, 1)
 
 
         self._expanded += 1 # DO NOT CHANGE
