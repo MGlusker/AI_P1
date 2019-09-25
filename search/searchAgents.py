@@ -289,8 +289,6 @@ class nodeClass():
 
 class stateClass():
 
-    #hasHitCorners = [False, False, False, False]
-
     def __init__(self, coordinates, hasHitcorners):
         self.coords = coordinates
         self.hasHitCorners = hasHitcorners
@@ -299,7 +297,6 @@ class stateClass():
         return self.coords
 
     def getHasHitCorners(self):
-
        return self.hasHitCorners
 
 class CornersProblem(search.SearchProblem):
@@ -356,6 +353,8 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
+        tempCorners = state.getHasHitCorners()
+
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -367,25 +366,19 @@ class CornersProblem(search.SearchProblem):
             #print "action loop"
             coordsOfAction = (nextx, nexty)
             #(successor, action, stepCost)
+            
             if not hitsWall:
-                successors.append((stateClass(coordsOfAction, state.getHasHitCorners()), action, 1))
-        
 
-        tempCorners = state.getHasHitCorners()
-    
-        #This adds successor when in corner
-        #specifically changing the state from not having hit corner to having hit corner
-        for i in range(4):
-            #print i
-            if(state.getCoords() == self.corners[i]):
-                #tempCorners[i] = True
-                state.hasHitCorners[i] = True
                 
-                #print tempCorners
-                #print state.getHasHitCorners()
-                print state.hasHitCorners
-                successors.append((stateClass(state.getCoords(), tempCorners), None, 1))
+                # if the next move goes into a corner
+                for i in range(len(self.corners)):
+                    if coordsOfAction == self.corners[i]:
 
+                        # update which corner has been hit
+                        tempCorners[i] = True 
+
+                    successors.append( (stateClass(coordsOfAction, tempCorners), action, 1) )
+        
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
