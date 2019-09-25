@@ -295,7 +295,7 @@ class stateClass():
         return self.coords
 
     def getHasHitCorners(self):
-        
+
         return self.hasHitCorners
 
 class CornersProblem(search.SearchProblem):
@@ -320,18 +320,18 @@ class CornersProblem(search.SearchProblem):
 
         #This is the necessary corners information
         #The corners list corresponds to [Lower Left, Upper Left, Lower Right, Upper Right]
-        initCorners = [False, False, False, False]
-        startNode = nodeClass(self.getStartState(), None, None, None)
+        self.initHasHitCorners = [False, False, False, False]
+        self.startNode = nodeClass(self.getStartState(), None, None, None)
 
     def getStartState(self):
-        return stateClass(startingPosition, initCorners)        
+        return stateClass(self.startingPosition, self.initHasHitCorners)        
 
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        if(state.getCorners == [True, True, True, True]):
+        if(state.getHasHitCorners() == [True, True, True, True]):
             print "Success!"
             return True
         else:
@@ -361,7 +361,7 @@ class CornersProblem(search.SearchProblem):
             coordsOfAction = nextx, nexty
 
             if not hitsWall:
-                successors.append(stateClass(coordsOfAction, state.getCorners()))
+                successors.append(stateClass(coordsOfAction, state.getHasHitCorners()))
 
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
 
