@@ -30,7 +30,7 @@ class SearchProblem:
 
     def getStartState(self):
         """
-        Returns the start state for the search problem.
+        Returns the start state for the search problem. 
         """
         util.raiseNotDefined()
 
@@ -62,95 +62,6 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-
-def tinyMazeSearch(problem):
-    """
-    Returns a sequence of moves that solves tinyMaze.  For any other maze, the
-    sequence of moves will be incorrect, so only use this for tinyMaze.
-    """
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
-
-
-def depthFirstSearch(problem):
-
-    # get the start state and convert it into a node
-    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
-
-    #create a stack to store the nodes that are on the frontier
-    frontier = util.Stack()
-
-    frontier.push(startNode) 
-
-    # create an explored set that keeps track of explored states 
-    explored = set()
-
-    # loop through frontier as long as it contains at least one node
-    while not frontier.isEmpty(): 
-
-        # pop the next node off the frontier
-        node = frontier.pop()
-
-        # if the popped off node's state is the goal state, return the solution
-        if problem.isGoalState(node.getState()): 
-            return getSolution(node, startNode)
-       
-        # if the node's state isn't in explored 
-        if node.getState() not in explored:
-
-            # then add the nodes state to explored
-            explored.add(node.getState())
-
-            # and add its children to the frontier 
-            # convertedNeighbors is a list of the succesor nodes
-            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
-            for child in convertedNeighbors:
-                frontier.push(child)
-
-    print "FAILURE: No Solution Found"
-    return Directions.STOP
-  
-
-def breadthFirstSearch(problem):
-
-    # get the start state and convert it into a node
-    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
-
-    #create a queue to store the nodes that are on the frontier
-    frontier = util.Queue()
-
-    frontier.push(startNode) 
-
-    # create an explored set that keeps track of explored states 
-    explored = set() 
-
-    # loop through frontier as long as it contains at least one node
-    while not frontier.isEmpty(): 
-
-        # pop the next node off the frontier
-        node = frontier.pop()
-        
-        # if the popped off node's state is the goal state, return the solution
-        if problem.isGoalState(node.getState()): 
-            return getSolution(node, startNode)
-       
-        # if the node's state isn't in explored 
-        if node.getState() not in explored:
-
-            # then add the nodes state to explored
-            explored.add(node.getState())
-
-            # and add its children to the frontier 
-            # convertedNeighbors is a list of the succesor nodes
-            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
-            for child in convertedNeighbors:
-                frontier.push(child)
-
-    print "FAILURE: No Solution Found"
-    return Directions.STOP
-
 class nodeClass():
 
     def __init__(self, state, direct, cost, parent):
@@ -176,8 +87,8 @@ class nodeClass():
         
 
 
-# returns a list of directions to take by expanding the goal state down to the start state
-def getSolution(node, startNode):
+# returns a list of directions to take by expanding the inputted node down to the start state
+def getListOfActions(node, startNode):
     currentNode = node
     toReturn = []
 
@@ -187,6 +98,7 @@ def getSolution(node, startNode):
 
     toReturn.reverse()
     return toReturn
+
 
 """
 def classToState(myList):
@@ -225,24 +137,69 @@ def successorsToNodes(myList, parent):
     
 
 
+def tinyMazeSearch(problem):
+    """
+    Returns a sequence of moves that solves tinyMaze.  For any other maze, the
+    sequence of moves will be incorrect, so only use this for tinyMaze.
+    """
+    from game import Directions
+    s = Directions.SOUTH
+    w = Directions.WEST
+    return  [s, s, w, s, w, w, s, w]
 
 
-def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    #"*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
+def depthFirstSearch(problem):
 
     # get the start state and convert it into a node
     startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
 
-    # create a priority queue to store the nodes that are on the frontier
-    #PQ ordered by path-cost where lowest cost = highest priority = will be popped out first)
-    frontier = util.PriorityQueue()
+    #create a stack to store the nodes that are on the frontier
+    frontier = util.Stack()
 
     frontier.push(startNode) 
 
     # create an explored set that keeps track of explored states 
-    explored = [] 
+    explored = set()
+
+    # loop through frontier as long as it contains at least one node
+    while not frontier.isEmpty(): 
+
+        # pop the next node off the frontier
+        node = frontier.pop()
+        node.printNode()
+
+        # if the popped off node's state is the goal state, return the solution
+        if problem.isGoalState(node.getState()): 
+            return getListOfActions(node, startNode)
+       
+        # if the node's state isn't in explored 
+        if node.getState() not in explored:
+
+            # then add the nodes state to explored
+            explored.add(node.getState())
+
+            # and add its children to the frontier 
+            # convertedNeighbors is a list of the succesor nodes
+            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
+            for child in convertedNeighbors:
+                frontier.push(child)
+
+    print "FAILURE: No Solution Found"
+    return Directions.STOP
+  
+
+def breadthFirstSearch(problem):
+
+    # get the start state and convert it into a node
+    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
+
+    #create a queue to store the nodes that are on the frontier
+    frontier = util.Queue()
+
+    frontier.push(startNode) 
+
+    # create an explored set that keeps track of explored states 
+    explored = set() 
 
     # loop through frontier as long as it contains at least one node
     while not frontier.isEmpty(): 
@@ -252,19 +209,59 @@ def uniformCostSearch(problem):
         
         # if the popped off node's state is the goal state, return the solution
         if problem.isGoalState(node.getState()): 
-            return getSolution(node, startNode)
+            return getListOfActions(node, startNode)
        
         # if the node's state isn't in explored 
         if node.getState() not in explored:
 
             # then add the nodes state to explored
-            explored.append(node.getState())
+            explored.add(node.getState())
 
             # and add its children to the frontier 
             # convertedNeighbors is a list of the succesor nodes
             convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
             for child in convertedNeighbors:
                 frontier.push(child)
+
+    print "FAILURE: No Solution Found"
+    return Directions.STOP
+
+
+def uniformCostSearch(problem):
+
+    # get the start state and convert it into a node
+    startNode = nodeClass(problem.getStartState(), "Stop", 0,  None)
+
+    # create a priority queue to store the nodes that are on the frontier
+    #PQ ordered by path-cost where lowest cost = highest priority = will be popped out first)
+    frontier = util.PriorityQueue()
+
+    frontier.push(startNode, problem.getCostOfActions(getListOfActions(startNode, startNode)))
+
+    # create an explored set that keeps track of explored states 
+    explored = set()
+
+    # loop through frontier as long as it contains at least one node
+    while not frontier.isEmpty(): 
+
+        # pop the next node off the frontier
+        node = frontier.pop()
+        
+        # if the popped off node's state is the goal state, return the solution
+        if problem.isGoalState(node.getState()): 
+            return getListOfActions(node, startNode)
+       
+        # if the node's state isn't in explored 
+        if node.getState() not in explored:
+
+            # then add the nodes state to explored
+            explored.add(node.getState())
+
+            # and add its children to the frontier 
+            # convertedNeighbors is a list of the succesor nodes
+            convertedNeighbors = successorsToNodes(problem.getSuccessors(node.getState()), node)
+            for child in convertedNeighbors:
+                frontier.push(child, problem.getCostOfActions(getListOfActions(child, startNode)))
 
     print "FAILURE: No Solution Found"
     return Directions.STOP
