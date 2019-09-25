@@ -265,6 +265,38 @@ def euclideanHeuristic(position, problem, info={}):
 #####################################################
 # This portion is incomplete.  Time to write code!  #
 #####################################################
+class nodeClass():
+    def __init__(self, state, direct, cost, parent):
+        self.state = state
+        self.direction = direct
+        self.parent = parent
+        self.cost = cost #cost from parent to this State
+
+
+    def getDirection(self):
+        return self.direction
+
+    def getCost(self):
+        return self.cost
+
+    def getParent(self):
+        return self.parent
+
+    def printNode(self):
+        print "*State:",self.state,"*Direction:",self.direction,"*Cost:",self.cost
+
+class stateClass():
+
+    def __init__(self, coordinates, hasHitcorners):
+        self.coords = coordinates
+        self.hasHitCorners = hasHitcorners
+
+    def getCoords(self):
+        return self.coords
+
+    def getHasHitCorners(self):
+        
+        return self.hasHitCorners
 
 class CornersProblem(search.SearchProblem):
     """
@@ -275,7 +307,7 @@ class CornersProblem(search.SearchProblem):
 
     def __init__(self, startingGameState):
         """
-        Stores the walls, pacman's starting position and corners.
+        Stores the walls, an's starting position and corners.
         """
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
@@ -285,24 +317,25 @@ class CornersProblem(search.SearchProblem):
             if not startingGameState.hasFood(*corner):
                 print 'Warning: no food in corner ' + str(corner)
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
-        # Please add any code here which you would like to use
-        # in initializing the problem
-        "*** YOUR CODE HERE ***"
+
+        #This is the necessary corners information
+        #The corners list corresponds to [Lower Left, Upper Left, Lower Right, Upper Right]
+        initCorners = [False, False, False, False]
+        startNode = nodeClass(self.getStartState(), None, None, None)
 
     def getStartState(self):
-        """
-        Returns the start state (in your state space, not the full Pacman state
-        space)
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return stateClass(startingPosition, initCorners)        
+
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if(state.getCorners == [True, True, True, True]):
+            print "Success!"
+            return True
+        else:
+            return False 
 
     def getSuccessors(self, state):
         """
@@ -319,12 +352,26 @@ class CornersProblem(search.SearchProblem):
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+            x,y = state.getCoords()
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+
+            coordsOfAction = nextx, nexty
+
+            if not hitsWall:
+                successors.append(stateClass(coordsOfAction, state.getCorners()))
+
+        self.corners = ((1,1), (1,top), (right, 1), (right, top))
+
+        tempCorners = corners
+        i = 0
+        while i < 4:
+            if(state.getCoords() == corners[i]):
+                tempCorners[i] == True
+                successors.append(stateClass(state.getCoords(), tempCorners))
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -361,6 +408,11 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
     return 0 # Default to trivial solution
+
+
+
+
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -417,6 +469,10 @@ class FoodSearchProblem:
                 return 999999
             cost += 1
         return cost
+
+
+
+
 
 class AStarFoodSearchAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -486,6 +542,10 @@ class ClosestDotSearchAgent(SearchAgent):
 
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
+
+
+
+
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
