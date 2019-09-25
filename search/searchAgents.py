@@ -366,7 +366,7 @@ class CornersProblem(search.SearchProblem):
             coordsOfAction = nextx, nexty
             #(successor, action, stepCost)
             if not hitsWall:
-                successors.append(stateClass(coordsOfAction, state.getHasHitCorners()), action, 1)
+                successors.append((stateClass(coordsOfAction, state.getHasHitCorners()), action, 1))
 
         
 
@@ -377,7 +377,7 @@ class CornersProblem(search.SearchProblem):
         for i in range(4):
             if(state.getCoords() == self.corners[i]):
                 tempCorners[i] == True
-                successors.append(stateClass(state.getCoords(), tempCorners), None, 1)
+                successors.append((stateClass(state.getCoords(), tempCorners), None, 1))
 
 
         self._expanded += 1 # DO NOT CHANGE
