@@ -289,18 +289,18 @@ class nodeClass():
 
 class stateClass():
 
-    hasHitCorners = [False, False, False, False]
+    #hasHitCorners = [False, False, False, False]
 
-    def __init__(self, coordinates):#, #hasHitcorners):
+    def __init__(self, coordinates, hasHitcorners):
         self.coords = coordinates
-        #self.hasHitCorners = hasHitcorners
+        self.hasHitCorners = hasHitcorners
 
     def getCoords(self):
         return self.coords
 
-    #def getHasHitCorners(self):
+    def getHasHitCorners(self):
 
-     #   return self.hasHitCorners
+       return self.hasHitCorners
 
 class CornersProblem(search.SearchProblem):
     """
@@ -323,7 +323,7 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
 
         self.initHasHitCorners = [False, False, False, False]
-        self.startState = stateClass(self.startingPosition)#, self.initHasHitCorners)  
+        self.startState = stateClass(self.startingPosition,self.initHasHitCorners)  
 
         #The corners list corresponds to [Lower Left, Upper Left, Lower Right, Upper Right]
         
@@ -338,7 +338,7 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        if(stateClass.hasHitCorners == [True, True, True, True]):
+        if(state.getHasHitCorners() == [True, True, True, True]):
             print "Success!"
             return True
         else:
@@ -368,24 +368,14 @@ class CornersProblem(search.SearchProblem):
             coordsOfAction = (nextx, nexty)
             #(successor, action, stepCost)
             if not hitsWall:
-                successors.append((stateClass(coordsOfAction), action, 1 ) )#, state.getHasHitCorners()), action, 1))
-                for i in range(4):
-                #print i
-                    if(state.getCoords() == self.corners[i]):
-                        #tempCorners[i] = True
-                        state.hasHitCorners[i] = True
-                
-                        #print tempCorners
-                        #print state.getHasHitCorners()
-                        print state.hasHitCorners
-                        successors.append((stateClass(state.getCoords()), action, 1) )#, tempCorners), None, 1))
+                successors.append((stateClass(coordsOfAction, state.getHasHitCorners()), action, 1))
         
 
-        #tempCorners = state.getHasHitCorners()
+        tempCorners = state.getHasHitCorners()
     
         #This adds successor when in corner
         #specifically changing the state from not having hit corner to having hit corner
-        """for i in range(4):
+        for i in range(4):
             #print i
             if(state.getCoords() == self.corners[i]):
                 #tempCorners[i] = True
@@ -394,8 +384,8 @@ class CornersProblem(search.SearchProblem):
                 #print tempCorners
                 #print state.getHasHitCorners()
                 print state.hasHitCorners
-                successors.append((stateClass(state.getCoords()), action, 1) )#, tempCorners), None, 1))
-"""
+                successors.append((stateClass(state.getCoords(), tempCorners), None, 1))
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
