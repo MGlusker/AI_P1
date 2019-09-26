@@ -425,23 +425,19 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     hasHitCorners = state[1]
-
-
-
-
-    newCorners = []
     estiDistances =[]
 
-    #filter out corners that have already been hit
-    #newCorners is a list =<4 of corner coords that haven't been hit yet
-    for i in range(4):
-        print hasHitCorners[i]
-        if (hasHitCorners[i]==False):
-            print "False loop"
-            newCorners.append(corners[i])
+
+    print "state[0]: ", state[0], " Type: ", state[0].__class__
+    print "state[0][0]: ", state[0][0], " Type: ", state[0][0].__class__
+
+    print 
+
+    [1, 2, 3, 4, 1, 4, 1].count(1)
+    
 
     #base case--if there is only one corner left 
-    if (len(newCorners) == 1):
+    if (hasHitCorners.count(False) == 1):
         return util.manhattanDistance(newCorners[0][0],newCorners[0][1])
     else:
 
@@ -451,9 +447,20 @@ def cornersHeuristic(state, problem):
             if (hasHitCorners[i]==False):
                 tempHasHitCorners[i] = False
 
-                print state[0].__class__
-                nextCorner = (newCorners[i][0],newCorners[i][1])
-                print nextCorner.__class__
+                print "First Tuple: ", state[0][0].__class__
+                nextCorner = (corners[i][0],corners[i][1])
+                print "SECOND Tuple: ", nextCorner[0].__class__
+
+
+
+
+
+
+
+                util.manhattanDistance(state[0],nextCorner)
+
+
+
 
                 estiDistances.append(util.manhattanDistance(state[0],nextCorner) + cornersHeuristic(((corners[0],corners[1]),tempHasHitCorners), problem))
 
@@ -484,7 +491,7 @@ class FoodSearchProblem:
         self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self._expanded = 0 # DO NOT CHANGE
+        self._expanded = 0 # DO NOT CHANGEf
         self.heuristicInfo = {} # A dictionary for the heuristic to store information
 
     def getStartState(self):
