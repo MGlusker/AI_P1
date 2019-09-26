@@ -321,11 +321,13 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
 
         self.initHasHitCorners = [False, False, False, False]
-        self.startState = stateClass(self.startingPosition,self.initHasHitCorners)  
+        #self.startState = stateClass(self.startingPosition,self.initHasHitCorners)  
+        self.startState = (self.startingPosition, self.initHasHitCorners)
+        #print self.startState
 
         #The corners list corresponds to [Lower Left, Upper Left, Lower Right, Upper Right]
         
-        self.startNode = nodeClass(self.getStartState(), "Stop", 0, None)
+        #self.startNode = nodeClass(self.getStartState(), "Stop", 0, None)
         
 
     def getStartState(self):
@@ -336,7 +338,8 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        if(state.getHasHitCorners() == [True, True, True, True]):
+        #if(state.getHasHitCorners() == [True, True, True, True]):
+        if(state[1] == [True, True, True, True]):
             print "Success!"
             return True
         else:
@@ -354,39 +357,38 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
-        tempCorners = state.getHasHitCorners()
-        #print state.getHasHitCorners()
-        print state.getCoords()
-        print state
-
+        
+    
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
             #print "action loop"
-            x,y = state.getCoords()
+            #x,y = state.getCoords()
+            x,y = state[0]
 
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
-            #print "action loop"
+            
             coordsOfAction = (nextx, nexty)
-            #(successor, action, stepCost)
+           
+            tempCorners = state[1]
             
             if not hitsWall:
 
                 # if the next move goes into a corner
                 for i in range(len(self.corners)):
                     if coordsOfAction == self.corners[i]:
-                        #print "It's a Corner"
+                        print "It's a Corner"
                         # update which corner has been hit
-                        #print i 
 
                         tempCorners[i] = True 
-                        #print tempCorners
+                        print tempCorners
 
-                    successors.append( (stateClass(coordsOfAction, tempCorners), action, 1) )
+                    #successors.append( (stateClass(coordsOfAction, tempCorners), action, 1) )
+                    successors.append( ( (coordsOfAction, tempCorners), action, 1) ) 
         
-
+        #print successors
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
