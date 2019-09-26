@@ -339,7 +339,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         if(state[1] == [True, True, True, True]): 
-            print "Success!"
+            
             return True
         else:
             return False 
@@ -347,7 +347,6 @@ class CornersProblem(search.SearchProblem):
     def getSuccessors(self, state):
         """
         Returns successor states, the actions they require, and a cost of 1.
-
          As noted in search.py:
             For a given state, this should return a list of triples, (successor,
             action, stepCost), where 'successor' is a successor to the current
@@ -375,7 +374,6 @@ class CornersProblem(search.SearchProblem):
                 # if the next move goes into a corner
                 for i in range(len(self.corners)):
                     if coordsOfAction == self.corners[i]:
-                        print "It's a Corner"
                         
                         # update which corner has been hit
                         temp[i] = True
@@ -420,37 +418,29 @@ def cornersHeuristic(state, problem):
     hasHitCorners = list(state[1])
     estiDistances = []
 
-    print "*******"
-    print "state", state, " Type: ", state.__class__
-    print "state[0]: ", state[0], " Type: ", state[0].__class__
-    print "state[0][0]: ", state[0][0], " Type: ", state[0][0].__class__
-    print "*******" 
-    print 
-
 
     #base case--if there is only one corner left 
     if (hasHitCorners.count(False) == 1):
-
         for i in range(4):
-            
-            if hasHitcorners[i] == False:
-                return util.manhattanDistance(state[0],corners[i])
-    else:
+            if hasHitCorners[i] == False:
+                estiDistances.append(util.manhattanDistance(state[0],corners[i]))
 
+    else:
         for i in range(4):
             tempHasHitCorners = hasHitCorners
 
             if (hasHitCorners[i]==False):
-                tempHasHitCorners[i] = False
 
-                print "First Tuple: ", state[0][0].__class__
-                nextCorner = corners[i]
-                print "SECOND Tuple: ", nextCorner[0].__class__
+                tempHasHitCorners[i] = True
+                nextCornerState = (corners[i], tempHasHitCorners)
 
-                estiDistances.append(util.manhattanDistance(state[0],nextCorner) + cornersHeuristic(((corners[i]),tempHasHitCorners), problem))
+                estiDistances.append(util.manhattanDistance(state[0],nextCornerState[0]) + cornersHeuristic(nextCornerState, problem))
 
-    
-    return estiDistances.min() # Default to trivial solution
+    if len(estiDistances) == 0: 
+        return 0
+    else:
+
+        return min(estiDistances) # Default to trivial solution
 
 
 
