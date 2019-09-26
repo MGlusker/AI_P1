@@ -434,7 +434,7 @@ def cornersHeuristic(state, problem):
         for i in range(4):
             
             if hasHitcorners[i] == False:
-                return util.manhattanDistance(corners[i],corners[i])
+                return util.manhattanDistance(state[0],corners[i])
     else:
 
         for i in range(4):
@@ -444,16 +444,8 @@ def cornersHeuristic(state, problem):
                 tempHasHitCorners[i] = False
 
                 print "First Tuple: ", state[0][0].__class__
-                nextCorner = (corners[i][0],corners[i][1])
+                nextCorner = corners[i]
                 print "SECOND Tuple: ", nextCorner[0].__class__
-
-
-
-
-
-
-
-                util.manhattanDistance(state[0],nextCorner)
 
                 estiDistances.append(util.manhattanDistance(state[0],nextCorner) + cornersHeuristic(((corners[i]),tempHasHitCorners), problem))
 
