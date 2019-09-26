@@ -419,15 +419,13 @@ def cornersHeuristic(state, problem):
 
     hasHitCorners = state[1]
     estiDistances =[]
-
-
+    print "*******"
+    print "state", state, " Type: ", state.__class__
     print "state[0]: ", state[0], " Type: ", state[0].__class__
     print "state[0][0]: ", state[0][0], " Type: ", state[0][0].__class__
-
+    print "*******" 
     print 
 
-    [1, 2, 3, 4, 1, 4, 1].count(1)
-    
 
     #base case--if there is only one corner left 
     if (hasHitCorners.count(False) == 1):
@@ -452,13 +450,11 @@ def cornersHeuristic(state, problem):
 
                 util.manhattanDistance(state[0],nextCorner)
 
-
-
-
-                estiDistances.append(util.manhattanDistance(state[0],nextCorner) + cornersHeuristic(((corners[0],corners[1]),tempHasHitCorners), problem))
+                estiDistances.append(util.manhattanDistance(state[0],nextCorner) + cornersHeuristic(((corners[i]),tempHasHitCorners), problem))
 
     
     return estiDistances.min() # Default to trivial solution
+
 
 
 
