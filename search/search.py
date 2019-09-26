@@ -199,8 +199,7 @@ def breadthFirstSearch(problem):
 
     # create an explored set that keeps track of explored states 
     explored = set()
-    explored2 = []
-
+   
     # loop through frontier as long as it contains at least one node
     while not frontier.isEmpty(): 
 
@@ -212,11 +211,11 @@ def breadthFirstSearch(problem):
             return getListOfActions(node, startNode)
        
         # if the node's state isn't in explored 
-        if node.getState().getCoords() not in explored and node.getState().getHasHitCorners() not in explored2:
+        if node.getState() not in explored:
 
             # then add the nodes state to explored
             explored.add(node.getState().getCoords())
-            explored2.append(node.getState().getHasHitCorners())
+            
 
             # and add its children to the frontier 
             # convertedNeighbors is a list of the succesor nodes

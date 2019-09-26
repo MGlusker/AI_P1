@@ -208,6 +208,7 @@ class PositionSearchProblem(search.SearchProblem):
             self._visited[state] = True
             self._visitedlist.append(state)
 
+
         return successors
 
     def getCostOfActions(self, actions):
@@ -419,7 +420,7 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
+    
     return 0 # Default to trivial solution
 
 
