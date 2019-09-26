@@ -427,6 +427,8 @@ def cornersHeuristic(state, problem):
     hasHitCorners = state[1]
 
 
+
+
     newCorners = []
     estiDistances =[]
 
@@ -442,11 +444,18 @@ def cornersHeuristic(state, problem):
     if (len(newCorners) == 1):
         return util.manhattanDistance(newCorners[0][0],newCorners[0][1])
     else:
-        for corner in newCorners:
-            print "corner"
-            print corner[0]
-            print corner[1]
-            estiDistances.append(util.manhattanDistance(corner[0],corner[1]) + cornersHeuristic(corner))
+
+        for i in range(4):
+            tempHasHitCorners = hasHitCorners
+
+            if (hasHitCorners[i]==False):
+                tempHasHitCorners[i] = False
+
+                print state[0].__class__
+                nextCorner = (newCorners[i][0],newCorners[i][1])
+                print nextCorner.__class__
+
+                estiDistances.append(util.manhattanDistance(state[0],nextCorner) + cornersHeuristic(((corners[0],corners[1]),tempHasHitCorners), problem))
 
     
     return estiDistances.min() # Default to trivial solution
