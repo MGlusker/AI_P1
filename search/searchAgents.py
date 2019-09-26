@@ -372,7 +372,7 @@ class CornersProblem(search.SearchProblem):
             
             coordsOfAction = (nextx, nexty)
            
-            tempCorners = state[1]
+            tempState = state
             
             if not hitsWall:
 
@@ -382,13 +382,13 @@ class CornersProblem(search.SearchProblem):
                         print "It's a Corner"
                         # update which corner has been hit
 
-                        tempCorners[i] = True 
-                        print tempCorners
+                        tempState[1][i] = True 
+                        #print tempCorners
 
                     #successors.append( (stateClass(coordsOfAction, tempCorners), action, 1) )
-                    successors.append( ( (coordsOfAction, tempCorners), action, 1) ) 
+               
+                successors.append( ( (coordsOfAction, tempState[1]), action, 1) ) 
         
-        #print successors
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
