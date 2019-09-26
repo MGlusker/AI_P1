@@ -417,8 +417,9 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    hasHitCorners = state[1]
-    estiDistances =[]
+    hasHitCorners = list(state[1])
+    estiDistances = []
+
     print "*******"
     print "state", state, " Type: ", state.__class__
     print "state[0]: ", state[0], " Type: ", state[0].__class__
@@ -429,7 +430,11 @@ def cornersHeuristic(state, problem):
 
     #base case--if there is only one corner left 
     if (hasHitCorners.count(False) == 1):
-        return util.manhattanDistance(newCorners[0][0],newCorners[0][1])
+
+        for i in range(4):
+            
+            if hasHitcorners[i] == False:
+                return util.manhattanDistance(corners[i],corners[i])
     else:
 
         for i in range(4):
