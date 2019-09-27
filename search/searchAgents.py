@@ -467,8 +467,8 @@ def cornersHeuristic(state, problem):
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
                 #expression = (m**2)/(m+1)
                 
-                print "nextCornerState:",nextCornerState.__class__
-                print "Problem: ", problem.__class__
+                #print "nextCornerState:",nextCornerState.__class__
+                #print "Problem: ", problem.__class__
 
                 estiDistances.append( m + cornersHeuristic(nextCornerState, problem))
 
@@ -594,36 +594,26 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-
-    walls = problem.walls
-
+    
     # a list to hold the distance to each available piece of food
     foodDistances = []
 
     # the grid of food at a given state as a list
     foodList = state[1].asList()
     
+    #problem.heuristicInfo['foodCount'] = len(foodList)
 
-    problem.heuristicInfo['foodCount'] = len(foodList)
+    for food in foodList:       
+        #foodDistances.append(mazeDistance(state[0], food, problem.startingGameState))
+        foodDistances.append(util.manhattanDistance(state[0], food))
 
-    print "Foodcount: ", problem.heuristicInfo['foodCount']
-    #print foodGrid
-    #print util.manhattanDistance(state[0], foodGrid[1])
-    
-    #print count(foodGrid)
-
-    if problem.heuristicInfo['foodCount'] == 0:
+    #if problem.heuristicInfo['foodCount'] == 0:
+    if len(foodList) == 0:
         return 0
-    else:
-        for food in foodList:
-            
-            foodDistances.append(mazeDistance(state[0], food, problem.startingGameState))
-           
-
-        print "Max food distance: ", max(foodDistances)
+    
+    else:   
         return max(foodDistances)
 
-    #util.raiseNotDefined()
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
