@@ -311,6 +311,7 @@ class CornersProblem(search.SearchProblem):
         """
         Stores the walls, an's starting position and corners.
         """
+        self.startingGameState = startingGameState
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
@@ -439,12 +440,12 @@ def cornersHeuristic(state, problem):
 
                 #Determine the coords and boolean list of the state of the possible first corners to hits
                 nextCornerState = (corners[i], tempHasHitCorners)
-
-
+                print "boop"
+                print (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
+                #m = (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
-                #expression = (m**2)/(m+1)
-                expression = m
-                estiDistances.append(expression + cornersHeuristic(nextCornerState, problem))
+               
+                estiDistances.append(m + cornersHeuristic(nextCornerState, problem))
 
 
     else: #state is necessarily a corner
@@ -461,6 +462,16 @@ def cornersHeuristic(state, problem):
                 nextCornerState = (corners[i], tempHasHitCorners)
 
 
+                m = (util.manhattanDistance(state[0],nextCornerState[0]))
+                #expression = (m**2)/(m+1)
+                expression = m
+                print "nextCornerState:",nextCornerState.__class__
+                print "Problem: ", problem.__class__
+                cornersHeuristic(nextCornerState, problem)
+                estiDistances.append( expression + cornersHeuristic(nextCornerState, problem))
+
+
+
                 #if we're on the hypotenuse of the rectangle
                 '''
                 if((state[0] == corners[0] and nextCornerState[0] == corners[3]) or (state[0] == corners[3] and nextCornerState[0] == corners[0])):
@@ -470,17 +481,10 @@ def cornersHeuristic(state, problem):
                     estiDistances.append(((util.manhattanDistance(state[0],nextCornerState[0]))) + cornersHeuristic(nextCornerState, problem) )
                 '''
 
-                m = (util.manhattanDistance(state[0],nextCornerState[0]))
-                #expression = (m**2)/(m+1)
-                expression = m
-                estiDistances.append( expression + cornersHeuristic(nextCornerState, problem))
-
-
-
     if len(estiDistances) == 0: 
         return 0
     else:
-        
+        return "min: ", min(estiDistances)
         return min(estiDistances) # Default to trivial solution
 
 
