@@ -418,7 +418,7 @@ def cornersHeuristic(state, problem):
 
     hasHitCorners = list(state[1])
     estiDistances = []
-    tempHasHitCorners = hasHitCorners
+    
 
     #print "cornersHeuristic"
     #base case--if there is only one corner left 
@@ -429,8 +429,10 @@ def cornersHeuristic(state, problem):
 
     if (state[0] not in corners): #When not a corner; i.e. at the very beginning of the heurisitic algorithm
         #print 'init'
-            
+        
         for i in range(4):
+
+            tempHasHitCorners = hasHitCorners
             #iterate through the list of boolean, stopping on every corners that hasn't been hit yet
             if (hasHitCorners[i]==False):
 
@@ -440,8 +442,8 @@ def cornersHeuristic(state, problem):
 
                 #Determine the coords and boolean list of the state of the possible first corners to hits
                 nextCornerState = (corners[i], tempHasHitCorners)
-                print "boop"
-                print (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
+            
+                #print (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
                 #m = (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
                
@@ -451,7 +453,7 @@ def cornersHeuristic(state, problem):
     else: #state is necessarily a corner
         for i in range(4):
             #print "recursive corner"
-        
+            tempHasHitCorners = hasHitCorners
             #iterate through the list of boolean, stopping on every corners that hasn't been hit yet
             if (hasHitCorners[i]==False):
 
@@ -464,11 +466,11 @@ def cornersHeuristic(state, problem):
 
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
                 #expression = (m**2)/(m+1)
-                expression = m
+                
                 print "nextCornerState:",nextCornerState.__class__
                 print "Problem: ", problem.__class__
-                cornersHeuristic(nextCornerState, problem)
-                estiDistances.append( expression + cornersHeuristic(nextCornerState, problem))
+
+                estiDistances.append( m + cornersHeuristic(nextCornerState, problem))
 
 
 
@@ -484,7 +486,7 @@ def cornersHeuristic(state, problem):
     if len(estiDistances) == 0: 
         return 0
     else:
-        return "min: ", min(estiDistances)
+        
         return min(estiDistances) # Default to trivial solution
 
 
