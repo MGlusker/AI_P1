@@ -417,33 +417,77 @@ def cornersHeuristic(state, problem):
 
     hasHitCorners = list(state[1])
     estiDistances = []
+    tempHasHitCorners = hasHitCorners
 
-
+    #print "cornersHeuristic"
     #base case--if there is only one corner left 
     if (hasHitCorners.count(False) == 1):
         for i in range(4):
             if hasHitCorners[i] == False:
                 estiDistances.append(util.manhattanDistance(state[0],corners[i]))
 
-    else:
+    if (state[0] not in corners): #When not a corner; i.e. at the very beginning of the heurisitic algorithm
+        #print 'init'
+            
         for i in range(4):
-            tempHasHitCorners = hasHitCorners
-
+            #iterate through the list of boolean, stopping on every corners that hasn't been hit yet
             if (hasHitCorners[i]==False):
 
+                #Mark this corner as hit
                 tempHasHitCorners[i] = True
+                
+
+                #Determine the coords and boolean list of the state of the possible first corners to hits
                 nextCornerState = (corners[i], tempHasHitCorners)
 
-                estiDistances.append(util.manhattanDistance(state[0],nextCornerState[0]) + cornersHeuristic(nextCornerState, problem))
+
+                m = (util.manhattanDistance(state[0],nextCornerState[0]))
+                expression = (m**2)/(m+1)
+                estiDistances.append(expression + cornersHeuristic(nextCornerState, problem))
+
+
+    else: #state is necessarily a corner
+        for i in range(4):
+            #print "recursive corner"
+        
+            #iterate through the list of boolean, stopping on every corners that hasn't been hit yet
+            if (hasHitCorners[i]==False):
+
+                #Mark this corner as hit
+                tempHasHitCorners[i] = True
+
+                #Determine the coords and boolean list of the state of the next corner
+                nextCornerState = (corners[i], tempHasHitCorners)
+
+
+                #if we're on the hypotenuse of the rectangle
+                '''
+                if((state[0] == corners[0] and nextCornerState[0] == corners[3]) or (state[0] == corners[3] and nextCornerState[0] == corners[0])):
+                    estiDistances.append(((util.manhattanDistance(state[0],nextCornerState[0]))) + cornersHeuristic(nextCornerState, problem) )
+
+                if((state[0] == corners[1] and nextCornerState[0] == corners[2]) or (state[0] == corners[1] and nextCornerState[0] == corners[0])):  
+                    estiDistances.append(((util.manhattanDistance(state[0],nextCornerState[0]))) + cornersHeuristic(nextCornerState, problem) )
+                '''
+
+                m = (util.manhattanDistance(state[0],nextCornerState[0]))
+                expression = (m**2)/(m+1)
+                estiDistances.append( expression + cornersHeuristic(nextCornerState, problem))
+
+
 
     if len(estiDistances) == 0: 
         return 0
     else:
-
+        
         return min(estiDistances) # Default to trivial solution
 
 
 
+def euclidean(pos1, pos2):
+    "The Euclidean distance heuristic for a PositionSearchProblem"
+    xy1 = pos1
+    xy2 = pos2
+    return ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
 
 
 
@@ -542,9 +586,7 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    util.raiseNotDefined()
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -552,6 +594,7 @@ class ClosestDotSearchAgent(SearchAgent):
         self.actions = []
         currentState = state
         while(currentState.getFood().count() > 0):
+            
             nextPathSegment = self.findPathToClosestDot(currentState) # The missing piece
             self.actions += nextPathSegment
             for action in nextPathSegment:
@@ -574,8 +617,7 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.breadthFirstSearch(problem)
 
 
 
@@ -611,11 +653,14 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         The state is Pacman's position. Fill this in with a goal test that will
         complete the problem definition.
-        """
+        """ 
         x,y = state
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if(self.food[x][y] == True):
+            self.food[x][y] = False
+            return True
+        else:
+            return False
 
 def mazeDistance(point1, point2, gameState):
     """
