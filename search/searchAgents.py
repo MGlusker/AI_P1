@@ -442,7 +442,8 @@ def cornersHeuristic(state, problem):
 
 
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
-                expression = (m**2)/(m+1)
+                #expression = (m**2)/(m+1)
+                expression = m
                 estiDistances.append(expression + cornersHeuristic(nextCornerState, problem))
 
 
@@ -470,7 +471,8 @@ def cornersHeuristic(state, problem):
                 '''
 
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
-                expression = (m**2)/(m+1)
+                #expression = (m**2)/(m+1)
+                expression = m
                 estiDistances.append( expression + cornersHeuristic(nextCornerState, problem))
 
 
