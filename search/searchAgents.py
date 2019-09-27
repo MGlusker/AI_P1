@@ -622,9 +622,6 @@ class ClosestDotSearchAgent(SearchAgent):
         return search.breadthFirstSearch(problem)
 
 
-
-
-
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
     A search problem for finding a path to any food.
