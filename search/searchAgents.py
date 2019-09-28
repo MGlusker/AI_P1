@@ -412,77 +412,19 @@ def cornersHeuristic(state, problem):
     admissible (as well as consistent).
     """
 
-
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     hasHitCorners = list(state[1])
     estiDistances = []
-    fromPointToCloseCorner = []
-    cornerToCorner = []
-    tempHasHitCorners = hasHitCorners
-
-    isCorner = False
-
-    if state[0] in corners:
-        isCorner = True
-
-    #find closest corner
-    if isCorner == False:
-        for i in range(4):
-            
-            #Tuple: (dist to corner, corner number)
-            fromPointToCloseCorner.append((util.manhattanDistance(state[0],corners[i])))
-
-        closeCornerIndex = fromPointToCloseCorner.index(min(fromPointToCloseCorner))
-        closeCornerDistance = min(fromPointToCloseCorner)
-        hasHitCorners[closeCornerIndex] = True
-        return closeCornerDistance
-
-    #base case
-    if (hasHitCorners.count(False) == 1):
-
-        for i in range(4):
-            if (hasHitCorners[i]==False):
-                nextCornerState = (corners[i], tempHasHitCorners)
-                return estiDistances.append(util.manhattanDistance(state[0],corners[i]))
-
-    else: #state is necessarily a corner
-        if isCorner:
-            for i in range(4):
-                
-                tempHasHitCorners = hasHitCorners
-
-                #iterate through the list of boolean, stopping on every corners that hasn't been hit yet
-                if (hasHitCorners[i]==False):
-
-                    #Mark this corner as hit
-                    tempHasHitCorners[i] = True
-
-                    #Determine the coords and boolean list of the state of the next corner
-                    nextCornerState = (corners[i], tempHasHitCorners)
-
-
-                    m = (util.manhattanDistance(state[0],nextCornerState[0]))
-                    #expression = (m**2)/(m+1)
-                    
-                    #print "nextCornerState:",nextCornerState.__class__
-                    #print "Problem: ", problem.__class__
-
-                    estiDistances.append( m + cornersHeuristic(nextCornerState, problem))
-
-    if len(estiDistances) == 0: 
-        return 0
-    else:  
-        return min(estiDistances)
-    """
-    #print "cornersHeuristic"
+    
     #base case--if there is only one corner left 
-    if (hasHitCorners.count(False) == 2):
-        return 0
+    if (hasHitCorners.count(False) == 1):
+        for i in range(4):
+            if hasHitCorners[i] == False:
+                estiDistances.append(util.manhattanDistance(state[0],corners[i]))
 
     if (state[0] not in corners): #When not a corner; i.e. at the very beginning of the heurisitic algorithm
-        #print 'init'
         
         for i in range(4):
 
@@ -496,9 +438,7 @@ def cornersHeuristic(state, problem):
 
                 #Determine the coords and boolean list of the state of the possible first corners to hits
                 nextCornerState = (corners[i], tempHasHitCorners)
-            
-                #print (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
-                #m = (mazeDistance(state[0],nextCornerState[0], problem.startingGameState))
+        
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
                
                 estiDistances.append(m + cornersHeuristic(nextCornerState, problem))
@@ -519,30 +459,16 @@ def cornersHeuristic(state, problem):
 
 
                 m = (util.manhattanDistance(state[0],nextCornerState[0]))
-                #expression = (m**2)/(m+1)
-                
-                print "nextCornerState:",nextCornerState.__class__
-                print "Problem: ", problem.__class__
 
                 estiDistances.append( m + cornersHeuristic(nextCornerState, problem))
 
-
-
-                #if we're on the hypotenuse of the rectangle
-                '''
-                if((state[0] == corners[0] and nextCornerState[0] == corners[3]) or (state[0] == corners[3] and nextCornerState[0] == corners[0])):
-                    estiDistances.append(((util.manhattanDistance(state[0],nextCornerState[0]))) + cornersHeuristic(nextCornerState, problem) )
-
-                if((state[0] == corners[1] and nextCornerState[0] == corners[2]) or (state[0] == corners[1] and nextCornerState[0] == corners[0])):  
-                    estiDistances.append(((util.manhattanDistance(state[0],nextCornerState[0]))) + cornersHeuristic(nextCornerState, problem) )
-                '''
-
+    # return 0 if at the goal state 
     if len(estiDistances) == 0: 
         return 0
-    else:
-        
-        return min(estiDistances) # Default to trivial solution
-    """
+
+    else:     
+        return min(estiDistances) 
+    
 
 
 def euclidean(pos1, pos2):
@@ -573,7 +499,7 @@ class FoodSearchProblem:
         self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self._expanded = 0 # DO NOT CHANGE
+        self._expanded = 0 # DO NOT CHANGEf
         self.heuristicInfo = {} # A dictionary for the heuristic to store information
 
     def getStartState(self):
@@ -648,39 +574,78 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    import pacman
-
-    walls = problem.walls
+    
+    # walls[x][y] will return true if there's a wall at that location
+    walls = problem.walls 
 
     # a list to hold the distance to each available piece of food
     foodDistances = []
-
-    gameState = problem.startingGameState.deepCopy()
 
     # the grid of food at a given state as a list
     foodList = state[1].asList()
     
 
-    problem.heuristicInfo['foodCount'] = len(foodList)
+    for food in foodList:       
+        
+        startPos = state[0]
 
-    print "Foodcount: ", problem.heuristicInfo['foodCount']
-    #print foodGrid
-    #print util.manhattanDistance(state[0], foodGrid[1])
-    
-    #print count(foodGrid)
+        xStartPos = startPos[0]
+        yStartPos = startPos[1]
 
-    for food in foodList:
-            
-        foodDistances.append(manhaDistance(state[0], food, gameState))
+        xFoodPos = food[0]
+        yFoodPos = food[1]
+
+        manDistance = util.manhattanDistance(state[0], food)
+
+
+        # go along the manhattan distance path, and if there's a wall along that path
+        # update the distance to increase by one
+
+        # the if statements account for the different possible starting points of pacman vs the food
+        if xStartPos <= xFoodPos and yStartPos <= yFoodPos:
+            for i in range(xStartPos, xFoodPos+1): 
+                for j in range(yStartPos, yFoodPos+1): 
+                    # if theres a wall increase manhattan distance
+                    if  i == xStartPos or j == yFoodPos:
+                        if walls[i][j] == True:
+                            manDistance = manDistance + 1
+       
+        elif xStartPos <= xFoodPos and yStartPos >= yFoodPos:
+            for i in range(xStartPos, xFoodPos+1): 
+                for j in range(yFoodPos, yStartPos+1): 
+                    # if theres a wall increase manhattan distance
+                    if  i == xStartPos or j == yFoodPos:
+                        if walls[i][j] == True:
+                            manDistance = manDistance + 1
+
+        elif xStartPos >= xFoodPos and yStartPos <= yFoodPos:
+            for i in range(xFoodPos, xStartPos+1): 
+                for j in range(yStartPos, yFoodPos+1): 
+                    # if theres a wall increase manhattan distance
+                    if  i == xStartPos or j == yFoodPos:
+                        if walls[i][j] == True:
+                            manDistance = manDistance + 1
+
+        elif xStartPos >= xFoodPos and yStartPos >= yFoodPos:
+            for i in range(xFoodPos, xStartPos+1): 
+                for j in range(yFoodPos, yStartPos+1): 
+                    # if theres a wall increase manhattan distance
+                    if  i == xStartPos or j == yFoodPos:
+                        if walls[i][j] == True:
+                            manDistance = manDistance + 1
+                             
+        foodDistances.append(manDistance)
 
 
     if len(foodList) == 0:
         return 0
-    else:
-        print "Max food distance: ", max(foodDistances)
-        return max(foodDistances)
+    
+    else:   
+        return max(foodDistances)    
+       
 
-    #util.raiseNotDefined()
+
+    
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
